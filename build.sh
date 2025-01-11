@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 VERSION="v1"
-QUAY_DEST="quay.io/openshift/ci/registry-liveness-probe:${VERSION}"
+QUAY_DEST="quay.io/openshift/ci-public:registry-liveness-probe-${VERSION}"
 GCR_HOST="us.gcr.io"
 GCR_DEST="${GCR_HOST}/openshift-ci-data-analysis/registry-liveness-probe:${VERSION}"
 # podman build . -t ${QUAY_DEST}
