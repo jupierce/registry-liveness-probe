@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-VERSION="v1"
-QUAY_DEST="quay.io/openshift/ci-public:registry-liveness-probe-${VERSION}"
-GCR_HOST="us.gcr.io"
-GCR_DEST="${GCR_HOST}/openshift-ci-data-analysis/registry-liveness-probe:${VERSION}"
-# podman build . -t ${QUAY_DEST}
-# podman push ${QUAY_DEST}
+
+. info.env
+
+podman build . -t ${QUAY_DEST}
+podman push ${QUAY_DEST}
 echo "Pushed image to ${QUAY_DEST}"
 
 # In order to run in a google console scheduled task, we need to push

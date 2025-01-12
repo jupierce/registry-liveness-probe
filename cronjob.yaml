@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: registry-liveness-probe
+  namespace: ci
+spec:
+  schedule: "*/1 * * * *" # Run every minute
+  jobTemplate:
+    spec:
+      backoffLimit: 0 # Do not retry failed pods
+      activeDeadlineSeconds: 600 # Kill the pod after 10 minutes
+      template:
+        spec:
+          restartPolicy: Never # Do not restart the pod on failure
+          tolerations:
+            - key: "node-role.kubernetes.io/ci-tests-worker"
+              operator: "Exists"
+              effect: "NoExecute"
+          containers:
+          - name: registry-liveness-probe
+            image: quay.io/openshift/ci-public:registry-liveness-probe-v1
+            envFrom:
+              - secretRef:
+                  name: registry-liveness-probe-service-account
+            env:
+              - name: AWS_DEFAULT_REGION
+                value: us-east-1
+            args:
+              - "--cloud=CLOUD"
+              - "--requester=REQUESTER"
+              - "--registry-config=aws@registry-liveness-probe-registry-config"
+              - "--bq-credentials=aws@registry-liveness-probe-bigquery-writer"
